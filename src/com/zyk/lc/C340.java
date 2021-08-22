@@ -4,21 +4,17 @@ public class C340 {
 
     public static int lengthOfLongestSubstringKDistinct(String s, int k) {
         char[] str = s.toCharArray();
-        int N = str.length;
-        int[] count = new int[256];
-        int diff = 0;
-        int R = 0;
-        int ans = 0;
-        for (int i = 0; i < N; i++) {
-            // R 窗口的右边界
-            while (R < N && (diff < k || (diff == k && count[str[R]] > 0))) {
-                diff += count[str[R]] == 0 ? 1 : 0;
-                count[str[R++]]++;
+        int N = str.length, l = 0, r = 0, diff = 0, ans = 0;
+        int[] cnt = new int[256];
+        while(l < N) {
+            while(r < N && (diff < k || (diff == k && cnt[str[r]] > 0))) {
+                diff += cnt[str[r]] == 0 ? 1 : 0;
+                cnt[str[r++]]++;
             }
-            // R 来到违规的第一个位置
-            ans = Math.max(ans, R - i);
-            diff -= count[str[i]] == 1 ? 1 : 0;
-            count[str[i]]--;
+            ans = Math.max(ans, r-l);   // r 首次来到越界的位置了，所以不用+1
+            // 窗口缩小
+            diff -= cnt[str[l]] == 1 ? 1 : 0;
+            cnt[str[l++]]--;
         }
         return ans;
     }
